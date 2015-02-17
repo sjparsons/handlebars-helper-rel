@@ -40,8 +40,8 @@ module.exports.register = function(Handlebars, options, params) {
     var relativePath = path.relative(from, path.dirname(to));
     // console.log(relativePath);
     var dest = path.join(relativePath, filename).replace(/\\/g, '/');
-    console.log("before: " + to + "\n\n");
-    console.log("AFTER: " + dest + "\n\n");
+    // console.log("before: " + to + "\n\n");
+    // console.log("AFTER: " + dest + "\n\n");
 
     return new Handlebars.SafeString(dest);
   });
