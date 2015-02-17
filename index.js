@@ -9,27 +9,42 @@
 var path = require('path');
 var _ = require('lodash');
 
-module.exports = function (config) {
-  var Handlebars = config.Handlebars;
-  var opts = config.options;
+module.exports.register = function(Handlebars, options, params) {
+  // var Handlebars = config.Handlebars;
+  // var opts = config.options;
+  // var helpers = {};
 
-  var helpers = {};
-  helpers.rel = function (to) {
-    var context = _.extend({}, opts, opts.data, this);
-
+  Handlebars.registerHelper('rel', function(to) {
+    var page, i;
+    var context = _.extend({}, options, options.data, this);
     // if the 'site' obj exists in the config, and `site.root`
     // exists, then join the `site.root` to each filename
+
     var destBase = context.site.root || context.site.base;
+    // console.log(destBase);
     to = context.site ? path.join(destBase, to) : to;
 
-    var from = path.dirname(context.page.dest);
+    for(i in options.pages) {
+      if (options.pages[i].isCurrentPage) {
+        page = options.pages[i];
+        break;
+      }
+    }
+
+    // console.log(page);
+    var from = page.dirname;
+    // console.log(from);
     var filename = path.basename(to);
+    // console.log(filename);
 
     var relativePath = path.relative(from, path.dirname(to));
+    // console.log(relativePath);
     var dest = path.join(relativePath, filename).replace(/\\/g, '/');
-    return new Handlebars.SafeString(dest);
-  };
+    console.log("before: " + to + "\n\n");
+    console.log("AFTER: " + dest + "\n\n");
 
-  return helpers;
+    return new Handlebars.SafeString(dest);
+  });
+  
 };
 
